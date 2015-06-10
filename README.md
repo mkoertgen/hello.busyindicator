@@ -1,6 +1,6 @@
 # Hello.BusyIndicator
 
-A Wpf sample for using [Xceeds BusyIndicator](http://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator&referringTitle=Home) in a decoupled, testable and [MVVM](http://en.wikipedia.org/wiki/Model_View_ViewModel)-friendly way with [Caliburn.Micro](http://caliburnmicro.com/), [AutoFac](http://autofac.org/) using including support for cancellation and optional progress. The sample app also shows how to deal smoothly with the [Windows Ribbon](https://msdn.microsoft.com/en-us/library/ff799534%28v=vs.110%29.aspx) which in general does not play well with MVVM.
+A Wpf sample for using [Xceeds BusyIndicator](http://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator&referringTitle=Home) in a decoupled, testable and [MVVM](http://en.wikipedia.org/wiki/Model_View_ViewModel)-friendly way with [Caliburn.Micro](http://caliburnmicro.com/) and [AutoFac](http://autofac.org/) using including support for cancellation and optional progress. The sample app also shows how to deal smoothly with the [Windows Ribbon](https://msdn.microsoft.com/en-us/library/ff799534%28v=vs.110%29.aspx) which in general does not play well with MVVM.
 
 ![Screenshot of sample application](HelloBusyIndicator.png)
 

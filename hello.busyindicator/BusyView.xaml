@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="hello.busyindicator.BusyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:hello.busyindicator"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:toolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:IBusyViewModel, d:IsDesignTimeCreatable=false}">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <local:BooleanToVisibilityConverter x:Key="InverseBoolToVisible" True="Collapsed" False="Visible" />
+    </UserControl.Resources>
+    <toolkit:BusyIndicator IsBusy="{Binding IsBusy, Mode=OneWay}">
+        <xctk:BusyIndicator.BusyContent>
+            <StackPanel Margin="4">
+                <TextBlock Text="{Binding WaitingFor, Mode=OneWay}"/>
+                <Grid Margin="20">
+                    <ProgressBar x:Name="pbStatus"
+                    IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay}" 
+                    Value="{Binding Progress, Mode=OneWay}" 
+                    Minimum="0" Maximum="100"
+                    Height="15" Margin="4"/>
+                    <TextBlock Text="{Binding Progress, Mode=OneWay, StringFormat={}{0:0}%}" 
+                        Visibility="{Binding IsIndeterminate, Converter={StaticResource InverseBoolToVisible}}"
+                        HorizontalAlignment="Center"  />
+                </Grid>
+                <Button cal:Message.Attach="Cancel" Content="Cancel" 
+            HorizontalAlignment="Right" 
+            Width="80" Height="24"
+            Margin="4" Padding="4"/>
+            </StackPanel>
+        </xctk:BusyIndicator.BusyContent>
+        <xctk:BusyIndicator.ProgressBarStyle>
+            <Style TargetType="ProgressBar">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </Style>
+        </xctk:BusyIndicator.ProgressBarStyle>
+
+        <ContentControl x:Name="Screen"/>
+    </toolkit:BusyIndicator>
+
+</UserControl>

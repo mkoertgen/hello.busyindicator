@@ -1,0 +1,48 @@
+﻿<RibbonWindow x:Class="hello.busyindicator.BusyRibbonView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:busyindicator="clr-namespace:hello.busyindicator"
+        Width="640" Height="480"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance busyindicator:IBusyRibbon, d:IsDesignTimeCreatable=False}">
+    <RibbonWindow.Resources>
+        <busyindicator:BooleanToVisibilityConverter True="Hidden" False="Visible" x:Key="InverseBoolToVisible"/>
+    </RibbonWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Ribbon IsMinimized="{Binding BusyScreen.IsBusy}"
+                Visibility="{Binding BusyScreen.IsBusy, Converter={StaticResource InverseBoolToVisible}}"
+                Focusable="False" KeyboardNavigation.TabNavigation="Contained"
+                WindowIconVisibility="Visible">
+            
+            <Ribbon.QuickAccessToolBar>
+                <RibbonQuickAccessToolBar>
+                    <RibbonButton Label="Help" cal:Message.Attach="DoShowHelp" ToolTip="Show Help" />
+                </RibbonQuickAccessToolBar>
+            </Ribbon.QuickAccessToolBar>
+
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Name="File" KeyTip="F">
+                    <RibbonApplicationMenuItem Header="Quit" KeyTip="Q" 
+                        cal:Message.Attach="DoQuit" HorizontalAlignment="Right"/>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+
+            <RibbonTab Header="View" KeyTip="V" >
+                <RibbonGroup Header="Navigate" KeyTip="N">
+                    <RibbonButton x:Name="DoGoBack" Label="&lt;" KeyTip="&lt;" ToolTip="Navigate Backward" />
+                    <RibbonButton x:Name="DoGoForward" Label="&gt;" KeyTip="&gt;" ToolTip="Navigate Forward" />
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+
+        <ContentControl x:Name="BusyScreen" Grid.Row="1" />
+    </Grid>
+</RibbonWindow>
+

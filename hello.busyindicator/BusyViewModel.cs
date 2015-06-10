@@ -24,6 +24,7 @@ namespace hello.busyindicator
             _events = events;
             _events.Subscribe(this);
             Screen = screen;
+            TimeOut = TimeSpan.MaxValue;
         }
 
         public bool IsBusy
@@ -66,8 +67,10 @@ namespace hello.busyindicator
         {
             WaitingFor = "Canceling...";
             Progress = -1;
-            _taskMessage?.Cancel();
+            _taskMessage?.CancelAfter(TimeOut);
         }
+
+        public TimeSpan TimeOut { get; set; }
 
         public async Task Handle(TaskMessage message)
         {

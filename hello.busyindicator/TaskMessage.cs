@@ -29,6 +29,9 @@ namespace hello.busyindicator
         }
 
         public void Cancel() { _ct?.Cancel(); }
+
+        public void CancelAfter(TimeSpan delay) { _ct?.CancelAfter(delay); }
+
         public void Dispose() { _ct?.Dispose(); }
     }
 }

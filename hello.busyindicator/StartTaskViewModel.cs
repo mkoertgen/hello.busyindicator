@@ -17,7 +17,6 @@ namespace hello.busyindicator
         {
             if (events == null) throw new ArgumentNullException(nameof(events));
             _events = events;
-            _events.Subscribe(this);
         }
 
         public void Start()

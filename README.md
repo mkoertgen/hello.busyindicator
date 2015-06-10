@@ -23,7 +23,7 @@ Then just wrap it into a `IBusyViewModel<>` like this
         DisplayRootViewFor<IBusyViewModel<IAppViewModel>>();
     }
 
-and additionaly register an implementation 
+and additionally register an implementation 
 
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
@@ -34,10 +34,60 @@ and additionaly register an implementation
         }
     }
 
+To fire off a long running task from anywhere publish a `TaskMessage` to caliburns event aggregator like this
 
+        public void Start()
+        {
+            var message = new TaskMessage(MyLongRunningTask,
+                $"Waiting for '{GetType().Name}'...");
+            _events.PublishOnUIThread();
+        }
 
-TODO...
-## Ribbon
+        public bool CanStart => _events.HandlerExistsFor(typeof(TaskMessage));
 
-For some reason the Ribbon always needs to  
-are showing. wa busy indicator around your main screen into BusyViewModel
+        private static void MyLongRunningTask(CancellationToken token, IProgress<int> progress)
+        {
+            const int n = 20;
+            var duration = TimeSpan.FromSeconds(20);
+
+            for (int i = 1; i <= n; i++)
+            {
+                token.ThrowIfCancellationRequested();
+                Thread.Sleep( (int)(duration.TotalMilliseconds / n) );
+                progress?.Report((100 * i) / n);
+            }
+        }
+
+The `BusyViewModel` handles the message by starting a new task and awaiting it
+
+	public async Task Handle(TaskMessage message)
+    {
+        using (_taskMessage = message)
+        {
+            _events.PublishOnUIThread(new NotificationEvent("Task started."));
+
+            WaitingFor = message.WaitingFor;
+            Progress = -1;
+            IsBusy = true;
+            try
+            {
+                await message.Run(new Progress<int>(p => Progress = p));
+                _events.PublishOnUIThread(new NotificationEvent("Task completed."));
+            }
+            catch (OperationCanceledException)
+            {
+                _events.PublishOnUIThread(new NotificationEvent("Task canceled."));
+            }
+            finally { IsBusy = false; }
+        }
+    }
+
+Cancellation goes like this
+
+        public void Cancel()
+        {
+            WaitingFor = "Canceling...";
+            Progress = -1;
+            _taskMessage?.CancelAfter(TimeOut);
+        }
+ 

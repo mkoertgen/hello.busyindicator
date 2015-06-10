@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using Caliburn.Micro;
 
@@ -11,6 +12,7 @@ namespace hello.busyindicator
         bool IsBusy { get; }
         string WaitingFor { get; }
         void Cancel();
+        TimeSpan TimeOut { get; set; }
 
         int Progress { get; }
         bool IsIndeterminate { get; }

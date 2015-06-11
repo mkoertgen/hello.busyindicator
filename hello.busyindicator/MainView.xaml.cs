@@ -1,8 +1,8 @@
 ﻿namespace hello.busyindicator
 {
-    public partial class BusyRibbonView
+    public partial class MainView
     {
-        public BusyRibbonView()
+        public MainView()
         {
             InitializeComponent();
         }

@@ -6,6 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="32">
     <Grid>
-        <Button x:Name="Start" Content="Start" Width="80" Height="24" Padding="4" Margin="4" HorizontalAlignment="Right"/>
+        <Button x:Name="Start" Content="Start" IsDefault="True"
+            HorizontalAlignment="Right"
+            Width="80" Height="24" 
+            Padding="4" Margin="4" />
     </Grid>
 </UserControl>

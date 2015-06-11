@@ -1,49 +1,57 @@
 # Hello.BusyIndicator
 
-A Wpf sample for using [Xceeds BusyIndicator](http://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator&referringTitle=Home) in a decoupled, testable and [MVVM](http://en.wikipedia.org/wiki/Model_View_ViewModel)-friendly way with [Caliburn.Micro](http://caliburnmicro.com/) and [AutoFac](http://autofac.org/) using including support for cancellation and optional progress. The sample app also shows how to deal smoothly with the [Windows Ribbon](https://msdn.microsoft.com/en-us/library/ff799534%28v=vs.110%29.aspx) which in general does not play well with MVVM.
+A Wpf sample for using [Xceeds BusyIndicator](http://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator&referringTitle=Home) in a decoupled, testable and [MVVM](http://en.wikipedia.org/wiki/Model_View_ViewModel)-friendly way with [Caliburn.Micro](http://caliburnmicro.com/) and [AutoFac](http://autofac.org/) using including support for cancellation and optional progress.
 
 ![Screenshot of sample application](HelloBusyIndicator.png)
 
 ## Usage
+### BusyViewModel <-> BusyIndicator
 
-For the standard use case just wrap your main screen with a busy indicator. Let's say your main screen is an implementation of `IAppViewModel` and this is the main screen you set up in the bootstrapper, i.e.
+Add an `IBusyViewModel` to your main view model and bind it to a [BusyIndicator](http://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator&referringTitle=Home) in your view, e.g. in the view model
 
-    public class AppBootstrapper : AutofacBootstrapper<IAppViewModel>>
+    public class AppViewModel : Screen, IAppViewModel
     {
-		...
-	    protected override void OnStartup(object sender, StartupEventArgs e)
-	    {
-	        DisplayRootViewFor<IAppViewModel>();
-	    }
-
-Then just wrap it into a `IBusyViewModel<>` like this
-
-    protected override void OnStartup(object sender, StartupEventArgs e)
-    {
-        DisplayRootViewFor<IBusyViewModel<IAppViewModel>>();
-    }
-
-and additionally register an implementation 
-
-        protected override void ConfigureContainer(ContainerBuilder builder)
+        public IBusyViewModel BusyIndicator { get; }
+ 
+        public AppViewModel(IBusyViewModel busyIndicator, ...)
         {
-            builder.RegisterType<BusyViewModel<IAppViewModel>>()
-				.As<IBusyViewModel<IAppViewModel>>()
-				.InstancePerLifetimeScope();
 			...
-        }
+
+and in the view
+
+    ...
+	<xctk:BusyIndicator IsBusy="{Binding BusyIndicator.IsBusy}">
+        <xctk:BusyIndicator.BusyContent>
+	       ...
+        </xctk:BusyIndicator.BusyContent>
+
+       <... main view goes here .. >
+
+    </xctk:BusyIndicator>
+
+
+Don't forget to register an `IBusyViewModel` implementation in the bootstrapper 
+
+    protected override void ConfigureContainer(ContainerBuilder builder)
+    {
+        builder.RegisterType<BusyViewModel>()
+			.As<IBusyViewModel>()
+			.InstancePerLifetimeScope();
+		...
     }
 
-To fire off a long running task from anywhere publish a `TaskMessage` to caliburns event aggregator like this
+### Starting Tasks
+
+To fire off a long running task from anywhere, publish a `StartTaskMessage` to the Caliburn `IEventAggregator` like this
 
         public void Start()
         {
-            var message = new TaskMessage(MyLongRunningTask,
-                $"Waiting for '{GetType().Name}'...");
-            _events.PublishOnUIThread();
+            var message = new StartTaskMessage(MyLongRunningTask,
+                $"Waiting for 'long running task'...");
+            _events.PublishOnUIThread(message);
         }
 
-        public bool CanStart => _events.HandlerExistsFor(typeof(TaskMessage));
+        public bool CanStart => _events.HandlerExistsFor(typeof(StartTaskMessage));
 
         private static void MyLongRunningTask(CancellationToken token, IProgress<int> progress)
         {
@@ -58,36 +66,17 @@ To fire off a long running task from anywhere publish a `TaskMessage` to calibur
             }
         }
 
-The `BusyViewModel` handles the message by starting a new task and awaiting it
+### Notes on Ribbon
 
-	public async Task Handle(TaskMessage message)
-    {
-        using (_taskMessage = message)
-        {
-            _events.PublishOnUIThread(new NotificationEvent("Task started."));
+A [Ribbon](https://msdn.microsoft.com/en-us/library/ff799534%28v=vs.110%29.aspx) must be placed in a `RibbonWindow`. Wrapping a `Ribbon` inside a `BusyIndicator` pretty much works like expected, i.e. when busy the ribbon gets disabled. However, keytips and commands in views or tabs can still be triggered. You don't want the user starting another action while busy. So to prevent this also minimize & hide the ribbon like this
 
-            WaitingFor = message.WaitingFor;
-            Progress = -1;
-            IsBusy = true;
-            try
-            {
-                await message.Run(new Progress<int>(p => Progress = p));
-                _events.PublishOnUIThread(new NotificationEvent("Task completed."));
-            }
-            catch (OperationCanceledException)
-            {
-                _events.PublishOnUIThread(new NotificationEvent("Task canceled."));
-            }
-            finally { IsBusy = false; }
-        }
-    }
+    <RibbonWindow.Resources>
+        <busyindicator:BooleanToVisibilityConverter True="Hidden" False="Visible" x:Key="InverseBoolToVisible"/>
+    </RibbonWindow.Resources>
 
-Cancellation goes like this
+	<...
 
-        public void Cancel()
-        {
-            WaitingFor = "Canceling...";
-            Progress = -1;
-            _taskMessage?.CancelAfter(TimeOut);
-        }
- 
+    <Ribbon IsMinimized="{Binding BusyIndicator.IsBusy}"
+        Visibility="{Binding BusyIndicator.IsBusy, Converter={StaticResource InverseBoolToVisible}}"
+        Focusable="False" KeyboardNavigation.TabNavigation="Contained"
+        WindowIconVisibility="Visible">

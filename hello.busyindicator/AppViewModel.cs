@@ -1,30 +1,55 @@
 ﻿using System;
+using System.Windows;
 using Caliburn.Micro;
 
 namespace hello.busyindicator
 {
-    public interface IAppViewModel : IScreen
-    {
-    }
-
+    // ReSharper disable once UnusedMember.Global
     // ReSharper disable once ClassNeverInstantiated.Global
     public class AppViewModel : Screen, IAppViewModel
     {
-        public AppViewModel(IStartTaskViewModel starter, INotificationsViewModel notifications)
+        public IBusyViewModel BusyIndicator { get; }
+        public IMainViewModel MainView { get; }
+
+        private string _notification;
+
+        public AppViewModel(IEventAggregator events, IBusyViewModel busyIndicator, IMainViewModel mainView)
         {
-            if (starter == null) throw new ArgumentNullException(nameof(starter));
-            if (notifications == null) throw new ArgumentNullException(nameof(notifications));
-            Starter = starter;
-            Notifications = notifications;
+            if (events == null) throw new ArgumentNullException(nameof(events));
+            if (busyIndicator == null) throw new ArgumentNullException(nameof(busyIndicator));
+            if (mainView == null) throw new ArgumentNullException(nameof(mainView));
+            events.Subscribe(this);
+            BusyIndicator = busyIndicator;
+            MainView = mainView;
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            DisplayName = "hello.busyindicator";
         }
 
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
-        // ReSharper disable MemberCanBePrivate.Global
-        public IStartTaskViewModel Starter { get; }
+        public string Notification
+        {
+            get { return _notification; }
+            set
+            {
+                if (_notification == value) return;
+                _notification = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public INotificationsViewModel Notifications { get; }
-        // ReSharper restore UnusedAutoPropertyAccessor.Global
-        // ReSharper restore once MemberCanBePrivate.Global
+        public void Handle(TaskState taskState)
+        {
+            Notification = $"Task {taskState}.";
+        }
 
+        public void DoQuit() { TryClose(); }
+
+        // ReSharper disable UnusedMember.Global
+        public void DoGoBack() { ShowNotImplemented(); }
+        public void DoGoForward() { ShowNotImplemented(); }
+        public void DoShowHelp() { ShowNotImplemented(); }
+        // ReSharper restore UnusedMember.Global
+
+
+        private static void ShowNotImplemented() { MessageBox.Show("Not implemented"); }
     }
 }

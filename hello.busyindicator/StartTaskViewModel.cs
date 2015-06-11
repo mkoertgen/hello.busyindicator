@@ -9,6 +9,7 @@ namespace hello.busyindicator
         void Start();
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class StartTaskViewModel : IStartTaskViewModel
     {
         private readonly IEventAggregator _events;
@@ -21,12 +22,14 @@ namespace hello.busyindicator
 
         public void Start()
         {
-            var message = new TaskMessage(MyLongRunningTask,
-                $"Waiting for '{GetType().Name}'...");
+            var message = new StartTaskMessage(
+                MyLongRunningTask,
+                "Waiting for 'long running process'...");
             _events.PublishOnUIThread(message);
         }
 
-        public bool CanStart => _events.HandlerExistsFor(typeof(TaskMessage));
+        // ReSharper disable once UnusedMember.Global
+        public bool CanStart => _events.HandlerExistsFor(typeof(StartTaskMessage));
 
         private static void MyLongRunningTask(CancellationToken token, IProgress<int> progress)
         {

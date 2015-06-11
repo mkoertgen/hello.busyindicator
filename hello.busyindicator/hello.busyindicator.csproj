@@ -109,39 +109,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BusyRibbonView.xaml.cs">
-      <DependentUpon>BusyRibbonView.xaml</DependentUpon>
+    <Compile Include="IAppViewModel.cs" />
+    <Compile Include="MainViewModel.cs" />
+    <Compile Include="StartTaskMessage.cs" />
+    <Compile Include="TaskState.cs" />
+    <Compile Include="AppView.xaml.cs">
+      <DependentUpon>AppView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BusyRibbonViewModel.cs" />
+    <Compile Include="AppViewModel.cs" />
     <Compile Include="AsyncTaskAssertExtensions.cs" />
     <Compile Include="BooleanConverter.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
-    <Compile Include="BusyView.xaml.cs">
-      <DependentUpon>BusyView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="BusyViewModel.cs" />
-    <Compile Include="IBusyRibbon.cs" />
     <Compile Include="IBusyViewModel.cs" />
-    <Compile Include="INotificationsViewModel.cs" />
-    <Compile Include="NotificationEvent.cs" />
-    <Compile Include="NotificationsView.xaml.cs">
-      <DependentUpon>NotificationsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NotificationsViewModel.cs" />
     <Compile Include="StartTaskView.xaml.cs">
       <DependentUpon>StartTaskView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskMessage.cs" />
-    <Compile Include="TaskMessage_Should.cs" />
-    <Page Include="BusyRibbonView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BusyView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="TaskAction.cs" />
+    <Compile Include="TaskAction_Should.cs" />
     <Page Include="AppView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -150,21 +140,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="AppView.xaml.cs">
-      <DependentUpon>AppView.xaml</DependentUpon>
+    <Compile Include="MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NotificationsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="StartTaskView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppViewModel.cs" />
     <Compile Include="StartTaskViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

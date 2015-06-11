@@ -81,6 +81,11 @@ namespace hello.busyindicator
                 {
                     _events.PublishOnUIThread(TaskState.Canceled);
                 }
+                catch (Exception)
+                {
+                    _events.PublishOnUIThread(TaskState.Faulted);
+                    throw;
+                }
                 finally
                 {
                     IsBusy = false;

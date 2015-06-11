@@ -1,4 +1,4 @@
 namespace hello.busyindicator
 {
-    public enum TaskState { Started, Completed, Canceled }
+    public enum TaskState { Started, Completed, Canceled, Faulted }
 }

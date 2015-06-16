@@ -64,11 +64,21 @@ namespace hello.busyindicator
 
         public async Task Handle(StartTaskMessage message)
         {
-            using (_taskAction = new TaskAction(message.Worker))
+            await Run(new TaskAction(message.Worker), message.WaitingFor);
+        }
+
+        public async Task Handle(StartThreadMessage message)
+        {
+            await Run(new TaskAction(message.Worker), message.WaitingFor);
+        }
+
+        private async Task Run(TaskAction action, string waitingFor)
+        {
+            using (_taskAction = action)
             {
                 try
                 {
-                    WaitingFor = message.WaitingFor;
+                    WaitingFor = waitingFor;
                     Progress = -1;
                     IsBusy = true;
                     _events.PublishOnUIThread(TaskState.Started);

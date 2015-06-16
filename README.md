@@ -66,6 +66,20 @@ To fire off a long running task from anywhere, publish a `StartTaskMessage` to t
             }
         }
 
+### Non-Responsive tasks
+
+Cancellation support in TPL is great, except when you can't use it. When restricted to synchronous calls with an external legacy API you cannot pass in a cancellation token - you just have to wait until the call returns successfully or exceptionally (e.g. timeout exceeded). An option for this kind of scenarios, although not recommended, is aborting threads as suggested [here](http://stackoverflow.com/questions/4783865/how-do-i-abort-cancel-tpl-tasks#19311606) i.e.
+
+    var t = Thread.CurrentThread;
+    using (_ct.Token.Register(t.Abort))
+    {
+        try { action(); }
+        catch (ThreadAbortException ex)
+        {
+            throw new OperationCanceledException("Blocking thread was canceled", ex);
+        }
+    }
+
 ### Notes on Ribbon
 
 A [Ribbon](https://msdn.microsoft.com/en-us/library/ff799534%28v=vs.110%29.aspx) must be placed in a `RibbonWindow`. Wrapping a `Ribbon` inside a `BusyIndicator` pretty much works like expected, i.e. when busy the ribbon gets disabled. However, keytips and commands in views or tabs can still be triggered. You don't want the user starting another action while busy. So to prevent this also minimize & hide the ribbon like this

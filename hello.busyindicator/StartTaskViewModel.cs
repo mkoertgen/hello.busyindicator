@@ -7,6 +7,7 @@ namespace hello.busyindicator
     public interface IStartTaskViewModel
     {
         void Start();
+        void StartNonResponsive();
     }
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -26,6 +27,21 @@ namespace hello.busyindicator
                 MyLongRunningTask,
                 "Waiting for 'long running process'...");
             _events.PublishOnUIThread(message);
+        }
+
+        public void StartNonResponsive()
+        {
+            var message = new StartThreadMessage(MyForeverRunningTask,
+                "Waiting for 'long running, non responsive  process'...");
+            _events.PublishOnUIThread(message);
+        }
+
+        private static void MyForeverRunningTask()
+        {
+            while (true)
+            {
+                Thread.Sleep(500);
+            }
         }
 
         // ReSharper disable once UnusedMember.Global

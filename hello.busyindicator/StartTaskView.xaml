@@ -14,7 +14,8 @@
         </Style>
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-        <Button x:Name="Start" Content="Responsive" IsDefault="True"/>
+        <Button x:Name="StartResponsive" Content="Responsive" IsDefault="True"/>
         <Button x:Name="StartNonResponsive" Content="Blocking" />
+        <Button x:Name="StartExceptional" Content="Exception" />
     </StackPanel>
 </UserControl>

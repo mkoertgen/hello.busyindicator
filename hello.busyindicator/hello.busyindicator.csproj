@@ -115,8 +115,10 @@
     </ApplicationDefinition>
     <Compile Include="BusyViewModel_Should.cs" />
     <Compile Include="IAppViewModel.cs" />
+    <Compile Include="IStartTaskViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="StartTaskMessage.cs" />
+    <Compile Include="TaskExceptionMessage.cs" />
     <Compile Include="TaskState.cs" />
     <Compile Include="AppView.xaml.cs">
       <DependentUpon>AppView.xaml</DependentUpon>

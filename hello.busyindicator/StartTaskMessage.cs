@@ -3,31 +3,37 @@ using System.Threading;
 
 namespace hello.busyindicator
 {
-    public abstract class StartDelegateMessage<TDelegate>
+    public interface IStartDelegateInfo
     {
-        public TDelegate Worker { get; }
-        public string WaitingFor { get; }
+        string TaskName { get; }
+    }
 
-        protected StartDelegateMessage(TDelegate worker, string waitingFor = null)
+    public abstract class StartDelegateMessage<TDelegate> : IStartDelegateInfo
+    {
+        public string TaskName { get; }
+        public TDelegate Worker { get; }
+
+        protected StartDelegateMessage(TDelegate worker, string taskName)
         {
             if (worker == null) throw new ArgumentNullException(nameof(worker));
+            if (string.IsNullOrWhiteSpace(taskName)) throw new ArgumentNullException(nameof(taskName));
             Worker = worker;
-            WaitingFor = waitingFor ?? "Please wait...";
+            TaskName = taskName;
         }
     }
 
     public class StartTaskMessage : StartDelegateMessage<Action<CancellationToken,IProgress<int>>>
     {
-        public StartTaskMessage(Action<CancellationToken, IProgress<int>> worker,
-            string waitingFor = null) : base(worker, waitingFor)
+        public StartTaskMessage(Action<CancellationToken, IProgress<int>> worker, string taskName) 
+            : base(worker, taskName)
         {
         }
     }
 
     public class StartThreadMessage : StartDelegateMessage<Action>
     {
-        public StartThreadMessage(Action worker, string waitingFor = null)
-            : base(worker, waitingFor)
+        public StartThreadMessage(Action worker, string taskName)
+            : base(worker, taskName)
         {
         }
     }

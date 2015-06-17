@@ -2,7 +2,9 @@
 
 namespace hello.busyindicator
 {
-    public interface IAppViewModel : IHandle<TaskState>
+    public interface IAppViewModel 
+        : IHandle<TaskState>
+        , IHandle<TaskExceptionMessage>
     {
         IBusyViewModel BusyIndicator { get; }
         IMainViewModel MainView { get; }

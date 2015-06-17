@@ -11,12 +11,27 @@ namespace hello.busyindicator
     class TaskAction_Should
     {
         [Test]
+        public void Copy_names()
+        {
+            const string taskName = nameof(Copy_names);
+
+            // test all ctors
+            using (var sut = new TaskAction((c, p) => { }, taskName))
+                sut.Name.Should().Be(taskName);
+
+            using (var sut = new TaskAction(() => { }, taskName))
+                sut.Name.Should().Be(taskName);
+        }
+
+        [Test]
         public async void Support_cancelable_tasks()
         {
+            const string taskName = nameof(Support_cancelable_tasks);
             // ReSharper disable once ObjectCreationAsStatement
-            0.Invoking(x => new TaskAction((Action<CancellationToken, IProgress<int>>) null)).ShouldThrow<ArgumentNullException>();
+            0.Invoking(x => new TaskAction((Action<CancellationToken, IProgress<int>>) null, taskName))
+                .ShouldThrow<ArgumentNullException>();
 
-            using (var sut = new TaskAction((t,p) => {throw new NotImplementedException();}))
+            using (var sut = new TaskAction((t,p) => {throw new NotImplementedException();}, taskName))
             {
                 await sut.Run().ShouldThrow<NotImplementedException>();
             }
@@ -29,7 +44,7 @@ namespace hello.busyindicator
                         Thread.Sleep(20);
                         p?.Report(i * 10);
                     }
-                }))
+                }, taskName))
             {
                 var task = sut.Run(new Progress<int>(p => Trace.TraceInformation($"{p}%")));
                 Thread.Sleep(100);
@@ -42,14 +57,15 @@ namespace hello.busyindicator
         public async void Support_blocking_threads()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            0.Invoking(x => new TaskAction((Action) null)).ShouldThrow<ArgumentNullException>();
+            0.Invoking(x => new TaskAction((Action) null, "test"))
+                .ShouldThrow<ArgumentNullException>();
 
             using (var sut = new TaskAction(() =>
             {
                 while (true)
                     Thread.Sleep(500);
                 // ReSharper disable once FunctionNeverReturns
-            }))
+            }, "test"))
             {
                 var task = sut.Run();
                 Thread.Sleep(100);

@@ -49,6 +49,7 @@ namespace hello.busyindicator
                 if (_progress == value) return;
                 _progress = value;
                 NotifyOfPropertyChange();
+                // ReSharper disable once ExplicitCallerInfoArgument
                 NotifyOfPropertyChange(nameof(IsIndeterminate));
             }
         }
@@ -57,28 +58,29 @@ namespace hello.busyindicator
 
         public void Cancel()
         {
-            WaitingFor = "Canceling...";
+            if (_taskAction == null) return;
+            WaitingFor = $"Cancelling '{_taskAction.Name}'...";
             Progress = -1;
-            _taskAction?.Cancel();
+            _taskAction.Cancel();
         }
 
         public async Task Handle(StartTaskMessage message)
         {
-            await Run(new TaskAction(message.Worker), message.WaitingFor);
+            await Run(new TaskAction(message.Worker, message.TaskName));
         }
 
         public async Task Handle(StartThreadMessage message)
         {
-            await Run(new TaskAction(message.Worker), message.WaitingFor);
+            await Run(new TaskAction(message.Worker, message.TaskName));
         }
 
-        private async Task Run(TaskAction action, string waitingFor)
+        private async Task Run(TaskAction taskAction)
         {
-            using (_taskAction = action)
+            using (_taskAction = taskAction)
             {
                 try
                 {
-                    WaitingFor = waitingFor;
+                    WaitingFor = $"Waiting for '{_taskAction.Name}'...";
                     Progress = -1;
                     IsBusy = true;
                     _events.PublishOnUIThread(TaskState.Started);
@@ -91,10 +93,13 @@ namespace hello.busyindicator
                 {
                     _events.PublishOnUIThread(TaskState.Canceled);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     _events.PublishOnUIThread(TaskState.Faulted);
-                    throw;
+                    var msg = new TaskExceptionMessage(_taskAction.Name, ex);
+                    _events.PublishOnUIThread(msg);
+                    if (!msg.Handled)
+                        throw;
                 }
                 finally
                 {

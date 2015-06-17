@@ -4,12 +4,6 @@ using Caliburn.Micro;
 
 namespace hello.busyindicator
 {
-    public interface IStartTaskViewModel
-    {
-        void Start();
-        void StartNonResponsive();
-    }
-
     // ReSharper disable once ClassNeverInstantiated.Global
     public class StartTaskViewModel : IStartTaskViewModel
     {
@@ -21,32 +15,26 @@ namespace hello.busyindicator
             _events = events;
         }
 
-        public void Start()
+        public void StartResponsive()
         {
             var message = new StartTaskMessage(
-                MyLongRunningTask,
-                "Waiting for 'long running process'...");
+                MyLongRunningTask, nameof(MyLongRunningTask));
             _events.PublishOnUIThread(message);
         }
 
         public void StartNonResponsive()
         {
-            var message = new StartThreadMessage(MyForeverRunningTask,
-                "Waiting for 'long running, non responsive  process'...");
+            var message = new StartThreadMessage(MyForeverRunningTask, nameof(MyForeverRunningTask));
             _events.PublishOnUIThread(message);
         }
 
-        private static void MyForeverRunningTask()
+        public void StartExceptional()
         {
-            while (true)
-            {
-                Thread.Sleep(500);
-            }
+            var message = new StartThreadMessage(MyExceptionalTask, nameof(MyExceptionalTask));
+            _events.PublishOnUIThread(message);
         }
 
         // ReSharper disable once UnusedMember.Global
-        public bool CanStart => _events.HandlerExistsFor(typeof(StartTaskMessage));
-
         private static void MyLongRunningTask(CancellationToken token, IProgress<int> progress)
         {
             const int n = 20;
@@ -59,5 +47,18 @@ namespace hello.busyindicator
                 progress?.Report((100 * i) / n);
             }
         }
+
+        private static void MyForeverRunningTask()
+        {
+            while (true) { Thread.Sleep(500); }
+        }
+
+        private static void MyExceptionalTask()
+        {
+            Thread.Sleep(1000);
+            throw new InvalidOperationException();
+        }
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using Caliburn.Micro;
 
@@ -51,5 +52,11 @@ namespace hello.busyindicator
 
 
         private static void ShowNotImplemented() { MessageBox.Show("Not implemented"); }
+        public void Handle(TaskExceptionMessage message)
+        {
+            Trace.TraceError("Could not execute '{0}': {1}", message.TaskName, message.Exception);
+            MessageBox.Show($"Could not execute '{message.TaskName}': {message.Exception.Message}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

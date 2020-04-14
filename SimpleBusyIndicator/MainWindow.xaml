@@ -1,0 +1,62 @@
+<Window x:Class="SimpleBusyIndicator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:simpleBusyIndicator="clr-namespace:SimpleBusyIndicator"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel Orientation="Vertical">
+        <Button Click="ToggleBusy_Click">Toggle Busy</Button>
+        <!-- 1. -->
+        <xctk:BusyIndicator x:Name="BusyIndicator" IsBusy="True">
+            <xctk:BusyIndicator.BusyContent>
+                <wpf:LoadingIndicator Style="{StaticResource LoadingIndicatorThreeDotsStyleKey}"
+                                      Foreground="#006fb2"/>
+            </xctk:BusyIndicator.BusyContent>
+            <xctk:BusyIndicator.ProgressBarStyle>
+                <Style TargetType="ProgressBar">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </xctk:BusyIndicator.ProgressBarStyle>
+            <TextBox TextWrapping="WrapWithOverflow">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in rhoncus elit. Duis magna nulla, iaculis eu urna vitae, feugiat porta odio. Duis sit amet ex nisi. Vestibulum tincidunt sollicitudin odio, ac lobortis mauris vehicula in. Proin blandit, lectus vel porttitor pretium, nunc ante facilisis sapien, eu ultricies orci libero ut nunc. Ut eget mattis quam. Donec sollicitudin tortor at justo ultricies egestas in eu diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus aliquam, turpis sed egestas gravida, neque ante eleifend metus, porta vulputate enim dui ultricies neque. Aenean tellus nibh, malesuada sed iaculis et, volutpat non leo. Suspendisse elementum pretium condimentum. Nulla nec magna posuere, consectetur augue sed, dictum felis. Sed volutpat sed arcu vitae commodo. Nulla eu dolor nec leo feugiat iaculis eget nec purus.
+            </TextBox>
+        </xctk:BusyIndicator>
+
+        <!-- 2. -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox TextWrapping="WrapWithOverflow" Grid.Row="0" Grid.Column="0">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in rhoncus elit. Duis magna nulla, iaculis eu urna vitae, feugiat porta odio. Duis sit amet ex nisi. Vestibulum tincidunt sollicitudin odio, ac lobortis mauris vehicula in. Proin blandit, lectus vel porttitor pretium, nunc ante facilisis sapien, eu ultricies orci libero ut nunc. Ut eget mattis quam. Donec sollicitudin tortor at justo ultricies egestas in eu diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus aliquam, turpis sed egestas gravida, neque ante eleifend metus, porta vulputate enim dui ultricies neque. Aenean tellus nibh, malesuada sed iaculis et, volutpat non leo. Suspendisse elementum pretium condimentum. Nulla nec magna posuere, consectetur augue sed, dictum felis. Sed volutpat sed arcu vitae commodo. Nulla eu dolor nec leo feugiat iaculis eget nec purus.
+            </TextBox>
+
+            <Rectangle Name="BusyRectangle" Fill="White" Opacity="0.5"/>
+            <ContentPresenter Name="BusyPresenter">
+                <ContentPresenter.Content>
+                    <wpf:LoadingIndicator Style="{StaticResource LoadingIndicatorThreeDotsStyleKey}"
+                                          Foreground="#006fb2"/>
+                </ContentPresenter.Content>
+            </ContentPresenter>
+        </Grid>
+
+        <!-- 3. -->
+        <simpleBusyIndicator:BusyIndicator x:Name="myBusyIndicator" IsBusy="True">
+            <simpleBusyIndicator:BusyIndicator.BusyContent>
+                <wpf:LoadingIndicator Style="{StaticResource LoadingIndicatorThreeDotsStyleKey}"
+                                      Foreground="#006fb2"/>
+            </simpleBusyIndicator:BusyIndicator.BusyContent>
+            <TextBox TextWrapping="WrapWithOverflow">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in rhoncus elit. Duis magna nulla, iaculis eu urna vitae, feugiat porta odio. Duis sit amet ex nisi. Vestibulum tincidunt sollicitudin odio, ac lobortis mauris vehicula in. Proin blandit, lectus vel porttitor pretium, nunc ante facilisis sapien, eu ultricies orci libero ut nunc. Ut eget mattis quam. Donec sollicitudin tortor at justo ultricies egestas in eu diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus aliquam, turpis sed egestas gravida, neque ante eleifend metus, porta vulputate enim dui ultricies neque. Aenean tellus nibh, malesuada sed iaculis et, volutpat non leo. Suspendisse elementum pretium condimentum. Nulla nec magna posuere, consectetur augue sed, dictum felis. Sed volutpat sed arcu vitae commodo. Nulla eu dolor nec leo feugiat iaculis eget nec purus.
+            </TextBox>
+        </simpleBusyIndicator:BusyIndicator>
+    </StackPanel>
+</Window>

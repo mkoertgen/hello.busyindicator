@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hello.busyindicator", "hello.busyindicator\hello.busyindicator.csproj", "{A527955B-6A3D-4F0B-9006-4C7F3CE70BAA}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENCE = LICENCE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBusyIndicator", "SimpleBusyIndicator\SimpleBusyIndicator.csproj", "{52C9F5D2-5EE7-4E58-9B8F-28DD3DAC87A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,8 +24,15 @@ Global
 		{A527955B-6A3D-4F0B-9006-4C7F3CE70BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A527955B-6A3D-4F0B-9006-4C7F3CE70BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A527955B-6A3D-4F0B-9006-4C7F3CE70BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C9F5D2-5EE7-4E58-9B8F-28DD3DAC87A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C9F5D2-5EE7-4E58-9B8F-28DD3DAC87A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C9F5D2-5EE7-4E58-9B8F-28DD3DAC87A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C9F5D2-5EE7-4E58-9B8F-28DD3DAC87A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {95A7C856-1715-4893-98FE-F0CDB350E5B1}
 	EndGlobalSection
 EndGlobal

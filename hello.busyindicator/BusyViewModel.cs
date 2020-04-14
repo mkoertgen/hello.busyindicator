@@ -14,8 +14,7 @@ namespace hello.busyindicator
 
         public BusyViewModel(IEventAggregator events)
         {
-            if (events == null) throw new ArgumentNullException(nameof(events));
-            _events = events;
+            _events = events ?? throw new ArgumentNullException(nameof(events));
             _events.Subscribe(this);
         }
 

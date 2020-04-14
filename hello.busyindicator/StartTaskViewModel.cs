@@ -11,8 +11,7 @@ namespace hello.busyindicator
 
         public StartTaskViewModel(IEventAggregator events)
         {
-            if (events == null) throw new ArgumentNullException(nameof(events));
-            _events = events;
+            _events = events ?? throw new ArgumentNullException(nameof(events));
         }
 
         public void StartResponsive()

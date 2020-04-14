@@ -12,9 +12,8 @@ namespace hello.busyindicator
 
         public TaskAction(Action<CancellationToken, IProgress<int>> worker, string name)
         {
-            if (worker == null) throw new ArgumentNullException(nameof(worker));
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-            _worker = worker;
+            _worker = worker ?? throw new ArgumentNullException(nameof(worker));
             Name = name;
         }
 

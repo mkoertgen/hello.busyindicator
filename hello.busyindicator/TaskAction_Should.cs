@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -24,14 +25,14 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public async void Support_cancelable_tasks()
+        public async Task Support_cancelable_tasks()
         {
             const string taskName = nameof(Support_cancelable_tasks);
             // ReSharper disable once ObjectCreationAsStatement
             0.Invoking(x => new TaskAction((Action<CancellationToken, IProgress<int>>) null, taskName))
-                .ShouldThrow<ArgumentNullException>();
+                .Should().Throw<ArgumentNullException>();
 
-            using (var sut = new TaskAction((t,p) => {throw new NotImplementedException();}, taskName))
+            using (var sut = new TaskAction((t,p) => throw new NotImplementedException(), taskName))
             {
                 await sut.Run().ShouldThrow<NotImplementedException>();
             }
@@ -54,11 +55,11 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public async void Support_blocking_threads()
+        public async Task Support_blocking_threads()
         {
             // ReSharper disable once ObjectCreationAsStatement
             0.Invoking(x => new TaskAction((Action) null, "test"))
-                .ShouldThrow<ArgumentNullException>();
+                .Should().Throw<ArgumentNullException>();
 
             using (var sut = new TaskAction(() =>
             {

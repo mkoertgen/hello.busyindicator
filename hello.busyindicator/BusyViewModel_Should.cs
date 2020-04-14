@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using FluentAssertions;
 using NSubstitute;
@@ -13,13 +14,13 @@ namespace hello.busyindicator
     class BusyViewModel_Should
     {
         [Test]
-        public async void Throw_on_task_errors()
+        public async Task Throw_on_task_errors()
         {
             var events = Substitute.For<IEventAggregator>();
             var sut = new BusyViewModel(events);
 
             const string taskName = nameof(Throw_on_task_errors);
-            var msg = new StartTaskMessage((c, p) => { throw new InvalidOperationException("test"); }, taskName);
+            var msg = new StartTaskMessage((c, p) => throw new InvalidOperationException("test"), taskName);
 
             await sut.Handle(msg)
                 .ShouldThrow<InvalidOperationException>();
@@ -27,20 +28,20 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public async void Catch_canceled_exceptions()
+        public async Task Catch_canceled_exceptions()
         {
             var events = Substitute.For<IEventAggregator>();
             var sut = new BusyViewModel(events);
 
             const string taskName = nameof(Throw_on_task_errors);
-            var msg = new StartTaskMessage((c, p) => { throw new OperationCanceledException("test"); }, taskName);
+            var msg = new StartTaskMessage((c, p) => throw new OperationCanceledException("test"), taskName);
 
             await sut.Handle(msg);
             events.Received().PublishOnUIThread(TaskState.Canceled);
         }
 
         [Test]
-        public async void Notify_completed()
+        public async Task Notify_completed()
         {
             var events = Substitute.For<IEventAggregator>();
             var sut = new BusyViewModel(events);
@@ -55,7 +56,7 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public async void Report_progress()
+        public async Task Report_progress()
         {
 
             var events = Substitute.For<IEventAggregator>();
@@ -86,12 +87,12 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public void Support_Cancelation()
+        public void Support_Cancellation()
         {
             var events = Substitute.For<IEventAggregator>();
             var sut = new BusyViewModel(events);
 
-            const string taskName = nameof(Support_Cancelation);
+            const string taskName = nameof(Support_Cancellation);
             var msg = new StartTaskMessage((c, p) => Enumerable.Range(1, 10).ToList().ForEach(i =>
             {
                 Thread.Sleep(10);
@@ -118,7 +119,7 @@ namespace hello.busyindicator
         }
 
         [Test]
-        public async void Support_exception_handling()
+        public async Task Support_exception_handling()
         {
             var events = Substitute.For<IEventAggregator>();
             var sut = new BusyViewModel(events);
@@ -144,7 +145,7 @@ namespace hello.busyindicator
             exMsg.Exception.Should().Be(taskException);
 
             // 2. assert rethrow for unhandled exceptions
-            startMsg = new StartTaskMessage((c,p) => { throw new NotImplementedException("test");}, taskName);
+            startMsg = new StartTaskMessage((c,p) => throw new NotImplementedException("test"), taskName);
             events.ClearReceivedCalls();
             await sut.Handle(startMsg).ShouldThrow<NotImplementedException>();
             events.Received().PublishOnUIThread(TaskState.Faulted);

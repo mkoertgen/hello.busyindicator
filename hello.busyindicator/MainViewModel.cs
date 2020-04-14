@@ -10,8 +10,7 @@ namespace hello.busyindicator
     {
         public MainViewModel(IStartTaskViewModel starter)
         {
-            if (starter == null) throw new ArgumentNullException(nameof(starter));
-            Starter = starter;
+            Starter = starter ?? throw new ArgumentNullException(nameof(starter));
         }
 
         // ReSharper disable UnusedAutoPropertyAccessor.Global
